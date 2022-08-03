@@ -5,10 +5,11 @@
 
 using namespace std;
 
+// singal information for inputs and outputs of logical components
 class signal {
     public:
-        bool value;
-        float voltage;
+        bool value; // on / off
+        float voltage; // voltage the point of usage
 
         signal();
         signal(bool value, float voltage);
@@ -16,22 +17,22 @@ class signal {
         bool operator!=(const signal *operand);
 };
 
-// template<function output>
+// base class for all basic logic components
 class LogicGate {
     public:
-        vector<signal> inputs;
-        unsigned int inputCount = 2;
-        signal _output;
+        vector<signal> inputs; // vector of inputs to the components
+        unsigned int inputCount = 2; // number of inputs for to take
+        // signal _output; // output variabe
 
         LogicGate() {};
-        // LogicGate(bool sourceValue);
-        virtual signal output() {return signal();};
+        virtual signal output() {return signal();}; // virtual output function for all subclasses to implement
         void input(LogicGate *source);
-        // void setinputCount(int length) {inputCount = length;}
 };
 
+// class for inputs connections to the diagram (takes no inputs)
 class LogicSource: public LogicGate {
     public:
+        signal _output;
         LogicSource(bool sourceValue);
         signal output() override;
 };
