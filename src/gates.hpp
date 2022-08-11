@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 #include <iostream>
 
 using namespace std;
@@ -37,12 +38,14 @@ class LogicSource: public LogicGate {
         signal output() override;
 };
 
+// perform AND boolean operation
 class AndGate: public LogicGate {
     public:
         AndGate(): LogicGate() {}
         signal output() override;
 };
 
+// perform NOT boolean operator
 class NotGate: public LogicGate {
     public:
         NotGate(): LogicGate() {inputCount = 1;}
