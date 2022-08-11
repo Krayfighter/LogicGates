@@ -4,6 +4,7 @@
 #include "gates.hpp"
 #include "diagram.hpp"
 #include "parser.hpp"
+#include "log.hpp"
 
 using namespace std;
 
@@ -17,9 +18,7 @@ int main() {
 
     parseFile("example.txt", &circuit);
 
-    for (signal output: circuit.outputs) {
-        cout << "value: " << output.value << ", voltage: " << output.voltage << endl;
-    }
+    logCircuitOutput(&circuit);
 
     // LogicSource in1(1);
     // LogicSource in2(0);
