@@ -1,0 +1,9 @@
+inputs 3
+addin 1
+addin 0
+addin 0
+gate not n1 _in1
+gate and a1 n1 _in0
+gate and a2 a1 _in2
+output a1
+output a2
