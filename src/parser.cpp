@@ -91,6 +91,54 @@ void parseFile(string filename, Circuit *circuit) {
                 linkComponent(circuit, &lines, i);
                 i++;
                 linkComponent(circuit, &lines, i);
+            }else if(lines[i] == "nand") {
+                i++;
+                circuit->components.push_back(
+                    NamedLogicGate{
+                        lines[i],
+                        new NandGate()
+                    }
+                );
+                i++;
+                linkComponent(circuit, &lines, i);
+                i++;
+                linkComponent(circuit, &lines, i);
+            }else if(lines[i] == "or") {
+                i++;
+                circuit->components.push_back(
+                    NamedLogicGate{
+                        lines[i],
+                        new OrGate()
+                    }
+                );
+                i++;
+                linkComponent(circuit, &lines, i);
+                i++;
+                linkComponent(circuit, &lines, i);
+            }else if(lines[i] == "nor") {
+                i++;
+                circuit->components.push_back(
+                    NamedLogicGate{
+                        lines[i],
+                        new NorGate()
+                    }
+                );
+                i++;
+                linkComponent(circuit, &lines, i);
+                i++;
+                linkComponent(circuit, &lines, i);
+            }else if(lines[i] == "xor") {
+                i++;
+                circuit->components.push_back(
+                    NamedLogicGate{
+                        lines[i],
+                        new XorGate()
+                    }
+                );
+                i++;
+                linkComponent(circuit, &lines, i);
+                i++;
+                linkComponent(circuit, &lines, i);
             }else {
                 throw runtime_error("Invalid gate name parsed");
             }
