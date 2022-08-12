@@ -62,3 +62,39 @@ signal AndGate::output() {
 signal NotGate::output() {
     return signal(!inputs[0].value, 0);
 }
+
+// if inputs[0] AND inputs[1] are 1 return 0 otherwise 1
+signal NandGate::output() {
+    if (inputs[0].value && inputs[1].value) {
+        return signal(false, 0);
+    }else {
+        return signal(true, 0);
+    }
+}
+
+// if inputs[0] OR inputs[1] 1 otherwise 0
+signal OrGate::output() {
+    if (inputs[0].value || inputs[1].value) {
+        return signal(true, 0);
+    }else {
+        return signal(false, 0);
+    }
+}
+
+// if neither inputs[0] nor inputs[1] 1 otherwise 0
+signal NorGate::output() {
+    if (inputs[0].value || inputs[1].value) {
+        return signal(false, 0);
+    }else {
+        return signal(true, 0);
+    }
+}
+
+// if and only if inputs[0] OR inputs[1]
+signal XorGate::output() {
+    if ((inputs[0].value || inputs[1].value) && !(inputs[0].value && inputs[1].value)) {
+        return signal(true, 0);
+    }else {
+        return signal(false, 0);
+    }
+}

@@ -11,6 +11,7 @@ class signal {
     public:
         bool value; // on / off
         float voltage; // voltage the point of usage
+        // string outputSource;
 
         signal();
         signal(bool value, float voltage);
@@ -45,9 +46,37 @@ class AndGate: public LogicGate {
         signal output() override;
 };
 
-// perform NOT boolean operator
+// perform NOT boolean operation
 class NotGate: public LogicGate {
     public:
         NotGate(): LogicGate() {inputCount = 1;}
+        signal output() override;
+};
+
+// perform NAND boolean operation
+class NandGate: public LogicGate {
+    public:
+        NandGate(): LogicGate() {inputCount = 2;}
+        signal output() override;
+};
+
+// perform OR boolean operation
+class OrGate: public LogicGate {
+    public:
+        OrGate(): LogicGate() {inputCount = 2;}
+        signal output() override;
+};
+
+// perform NOR boolean operation
+class NorGate: public LogicGate {
+    public:
+        NorGate(): LogicGate() {inputCount = 2;}
+        signal output() override;
+};
+
+// perform XOR boolean operation
+class XorGate: public LogicGate {
+    public:
+        XorGate(): LogicGate() {inputCount = 2;}
         signal output() override;
 };
