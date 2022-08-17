@@ -17,3 +17,9 @@ LogicGate *Circuit::searchGate(string name) {
     return new LogicGate(); // redundant | here to stop compiler warning
     // warning: control reaches end of non-void function [-Wreturn-type]
 }
+wire *Circuit::newWire() {
+    wires.push_back(wire());
+    return &wires[
+        wires.size()-1
+    ];
+}

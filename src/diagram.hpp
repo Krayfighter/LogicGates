@@ -26,9 +26,11 @@ class Circuit {
     // private:
     public:
         unsigned int inputCount;
-        vector<LogicSource> inputs;
+        vector<wire> inputs;
+        vector<shared_ptr<wire>> outputs;
+        vector<wire> wires;
         vector<NamedLogicGate> components;
-        vector<signal> outputs;
         Circuit() {};
         LogicGate *searchGate(string name);
+        wire *newWire();
 };

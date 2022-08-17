@@ -24,13 +24,13 @@ void linkComponent(Circuit *circuit, vector<string> *lines, unsigned int i) {
         circuit->components[ // get the latest member of circuit's components
             circuit->components.size()-1
         ].gate->input( // give its gate the input of previously obtained input number (snum)
-            &circuit->inputs[inum]
+            circuit->inputs[inum].getValue()
         );
     }else { // the input to the current component is the output of another
         LogicGate *gate = circuit->searchGate(lines->at(i)); // search for the input gate by name
         circuit->components[ // get the current component
             circuit->components.size()-1
-        ].gate->input(gate); // set its input the the selected gate's output
+        ].gate->input(gate->output()); // set its input the the selected gate's output
     }
 }
 
