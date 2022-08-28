@@ -5,79 +5,100 @@
 #include <iostream>
 #include <memory>
 
+#define COMPONENT_TEMPLATE template <size_t inputCount>
+
 using namespace std;
 
-// singal information for inputs and outputs of logical components
-class wire {
-    public:
-        bool value; // on / off
-        float voltage; // voltage the point of usage
-        // string outputSource;
+// // singal information for inputs and outputs of logical components
+// class wire {
+//     public:
+//         bool value; // on / off
+//         float voltage; // voltage the point of usage
+//         // string outputSource;
 
-        wire();
-        wire(bool value, float voltage);
-        void setValue(bool value, float voltage);
-        shared_ptr<wire> getValue();
-        // bool operator==(const wire *operand);
-        // bool operator!=(const wire *operand);
+//         wire();
+//         wire(bool value, float voltage);
+//         void setValue(bool value, float voltage);
+//         shared_ptr<wire> getValue();
+//         // bool operator==(const wire *operand);
+//         // bool operator!=(const wire *operand);
+// };
+
+struct Signal {
+    bool value;
+    float voltage;
+    Signal();
+    Signal(bool value, float voltage);
+    Signal operator+(Signal &&rvalue);
+};
+
+class ComponentBase {
+    public:
+        string name;
+        ComponentBase(string name);
+        virtual void input(ComponentBase *component);
+        virtual Signal output();
 };
 
 // class for inputs connections to the diagram (takes no inputs)
-class LogicSource: public wire {
+class Input: public ComponentBase {
+    private:
+        Signal _output = Signal();
     public:
-        LogicSource(bool sourceValue): wire(sourceValue, 5) {}
+      Input(string name, bool sourceValue);
+      virtual Signal output() override;
 };
 
 // base class for all basic logic components
-class LogicGate {
+COMPONENT_TEMPLATE
+class Component: public ComponentBase {
     public:
-        vector<shared_ptr<wire>> inputs; // vector of inputs to the components
-        unsigned int inputCount = 2; // number of inputs for to take
-        // wire _output; // output variabe
+        array<ComponentBase *, inputCount> inputs = {nullptr}; // vector of inputs to the components
 
-        LogicGate() {};
-        virtual unique_ptr<wire> output() {return unique_ptr<wire> (new wire(0, -1));}; // virtual output function for all subclasses to implement
-        void input(shared_ptr<wire> source);
+        Component(string name): ComponentBase(name) {};
+        virtual Signal output() override; // virtual output function for all subclasses to implement
+        virtual void input(ComponentBase *source) override;
 };
 
 // perform AND boolean operation
-class AndGate: public LogicGate {
+class AndGate: public Component<2> {
     public:
-        AndGate(): LogicGate() {}
-        unique_ptr<wire> output() override;
+        AndGate(string name): Component(name) {}
+        virtual Signal output() override;
 };
 
 // perform NOT boolean operation
-class NotGate: public LogicGate {
+class NotGate: public Component<1> {
     public:
-        NotGate(): LogicGate() {inputCount = 1;}
-        unique_ptr<wire> output() override;
+        NotGate(string name): Component(name) {};
+        virtual Signal output() override;
+        // virtual ;
 };
 
 // perform NAND boolean operation
-class NandGate: public LogicGate {
+class NandGate: public Component<2> {
     public:
-        NandGate(): LogicGate() {inputCount = 2;}
-        unique_ptr<wire> output() override;
+        NandGate(string name): Component(name) {}
+        virtual Signal output() override;
 };
 
 // perform OR boolean operation
-class OrGate: public LogicGate {
+class OrGate: public Component<2> {
     public:
-        OrGate(): LogicGate() {inputCount = 2;}
-        unique_ptr<wire> output() override;
+        OrGate(string name): Component(name) {}
+        virtual Signal output() override;
 };
 
 // perform NOR boolean operation
-class NorGate: public LogicGate {
+class NorGate: public Component<2> {
     public:
-        NorGate(): LogicGate() {inputCount = 2;}
-        unique_ptr<wire> output() override;
+        NorGate(string name): Component(name) {}
+        virtual Signal output() override;
 };
 
 // perform XOR boolean operation
-class XorGate: public LogicGate {
+class XorGate: public Component<2> {
     public:
-        XorGate(): LogicGate() {inputCount = 2;}
-        unique_ptr<wire> output() override;
+        XorGate(string name): Component(name) {}
+        virtual Signal output() override;
 };
