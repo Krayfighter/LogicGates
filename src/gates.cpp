@@ -5,100 +5,127 @@
 
 using namespace std;
 
-// *** singal implementations
-wire::wire() {
-    value = false;
+
+
+Signal::Signal() {
+    value = 0;
     voltage = 0;
 }
-wire::wire(bool value, float voltage) {
+Signal::Signal(bool value, float voltage) {
     this->value = value;
     this->voltage = voltage;
 }
-void wire::setValue(bool value, float voltage) {
-    this->value = value, this->voltage = voltage;
+Signal Signal::operator+(Signal &&rvalue) {
+    return Signal(
+        this->value || rvalue.value,
+        (this->voltage+rvalue.voltage)/2
+    );
 }
-shared_ptr<wire> wire::getValue() {return (shared_ptr<wire>) this;}
-//  // if both wires share the same value and voltage returns true
-// bool wire::operator==(const wire *operand) {
-//     if (this->value == operand->value && this->voltage == operand->voltage) {
-//         return true;
-//     }else {
-//         return false;
-//     }
-// }
-//  // the inverse of wire::operator==();
-// bool wire::operator!=(const wire *operand) {
-//     if (this==operand) {
-//         return false;
-//     }else {
-//         return true;
-//     }
-// }
 
-// adds another LogicGate's output to the `inputs` vector
-void LogicGate::input(shared_ptr<wire> source) {
-    if (inputs.size() >= inputCount) {
-        throw std::runtime_error("too many logic gate inputs");
-    }else{
-        inputs.push_back(source);
+
+// ComponentBase member functions
+ComponentBase::ComponentBase(string name) { this->name = name; };
+void ComponentBase::input(ComponentBase *component) {
+    throw runtime_error("not intended for use");
+    if (component->name == "") {} // removes compiler warning
+};
+Signal ComponentBase::output() { throw runtime_error("not intended for use"); };
+
+// Input class member functions
+Input::Input(string name, bool sourceValue) : ComponentBase(name) {
+    _output = Signal(sourceValue, 5);
+}
+Signal Input::output() { return _output; }
+
+// Component class member functions
+COMPONENT_TEMPLATE
+void Component<inputCount>::input(ComponentBase *source) {
+    bool passed = false;
+    for(size_t i = 0; i < inputCount; i++) {
+        if(inputs[i] == nullptr) {
+            inputs[i] = source;
+            passed = true;
+            break;
+        }
     }
+    if (!passed) {
+        throw runtime_error("no open inputs in component");
+    }
+};
+
+COMPONENT_TEMPLATE
+Signal Component<inputCount>::output() {
+    Signal tmp;
+    for(size_t i = 0; i < inputCount; i++) {
+        tmp = tmp + inputs[i]->output();
+    }
+    return tmp;
 }
 
-// // init logic source with a value (1, 0), (true, false)
-// LogicSource::LogicSource(bool sourceValue) {
-//     inputCount = 0;
-//     _output = wire(sourceValue, 5);
-// }
-// unique_ptr<wire> LogicSource::output() {
-//     return (unique_ptr<wire>) &_output;
-// }
+
+// This is for linking purposes only
+template<> Signal Component<1>::output() {
+    Signal _output;
+    for(auto item: inputs) {
+        _output = _output + item->output();
+    }
+    return _output;
+}
+// This is for linking purposes only
+template<> Signal Component<2>::output() {
+    Signal _output;
+    for(auto item: inputs) {
+        _output = _output + item->output();
+    }
+    return _output;
+}
 
 // if inputs[0] AND inputs[1] are 1 return 1
-unique_ptr<wire> AndGate::output() {
-    if (inputs[0]->value && inputs[1]->value) {
-        return (unique_ptr<wire>) new wire(true, 0);
+Signal AndGate::output() {
+    if (inputs[0]->output().value && inputs[1]->output().value) {
+        return Signal(true, 0);
     }else {
-        return (unique_ptr<wire>) new wire(false, 0);
+        return Signal(false, 0);
     }
 }
 
 // return the opposite of the input
-unique_ptr<wire> NotGate::output() {
-    return (unique_ptr<wire>) new wire(!inputs[0]->value, 0);
+Signal NotGate::output() {
+    return Signal(!inputs[0]->output().value, 0);
 }
 
 // if inputs[0] AND inputs[1] are 1 return 0 otherwise 1
-unique_ptr<wire> NandGate::output() {
-    if (inputs[0]->value && inputs[1]->value) {
-        return (unique_ptr<wire>) new wire(false, 0);
+Signal NandGate::output() {
+    if (inputs[0]->output().value && inputs[1]->output().value) {
+        return Signal(false, 0);
     }else {
-        return (unique_ptr<wire>) new wire(true, 0);
+        return Signal(true, 0);
     }
 }
 
 // if inputs[0] OR inputs[1] 1 otherwise 0
-unique_ptr<wire> OrGate::output() {
-    if (inputs[0]->value || inputs[1]->value) {
-        return (unique_ptr<wire>) new wire(true, 0);
+Signal OrGate::output() {
+    if (inputs[0]->output().value || inputs[1]->output().value) {
+        return Signal(true, 0);
     }else {
-        return (unique_ptr<wire>) new wire(false, 0);
+        return Signal(false, 0);
     }
 }
 
 // if neither inputs[0] nor inputs[1] 1 otherwise 0
-unique_ptr<wire> NorGate::output() {
-    if (inputs[0]->value || inputs[1]->value) {
-        return (unique_ptr<wire>) new wire(false, 0);
+Signal NorGate::output() {
+    if (inputs[0]->output().value || inputs[1]->output().value) {
+        return Signal(false, 0);
     }else {
-        return (unique_ptr<wire>) new wire(true, 0);
+        return Signal(true, 0);
     }
 }
 
 // if and only if inputs[0] OR inputs[1]
-unique_ptr<wire> XorGate::output() {
-    if ((inputs[0]->value || inputs[1]->value) && !(inputs[0]->value && inputs[1]->value)) {
-        return (unique_ptr<wire>) new wire(true, 0);
+Signal XorGate::output() {
+    if ((inputs[0]->output().value || inputs[1]->output().value) && !(inputs[0]->output().value && inputs[1]->output().value)) {
+        return Signal(true, 0);
     }else {
-        return (unique_ptr<wire>) new wire(false, 0);
+        return Signal(false, 0);
     }
 }

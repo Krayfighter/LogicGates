@@ -1,7 +1,6 @@
-inputs 3
-addin 1
-addin 0
-addin 0
+input 0 0
+input 1 1
+input 2 0
 gate not n1 _in1
 gate and a1 n1 _in0
 gate nand outgate a1 _in2

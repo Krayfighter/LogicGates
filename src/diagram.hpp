@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <array>
-#include <type_traits>
+// #include <type_traits>
+#include <map>
 
 #include "gates.hpp"
 
@@ -17,20 +18,21 @@
 //         array<signal, outputCount> outputs;
 // };
 
-struct NamedLogicGate {
-    string name;
-    LogicGate *gate;
-};
+// struct NamedLogicGate {
+//     string name;
+//     LogicGate *gate;
+// };
 
-class Circuit {
+
+class Circuit: public ComponentBase {
     // private:
     public:
-        unsigned int inputCount;
-        vector<wire> inputs;
-        vector<shared_ptr<wire>> outputs;
-        vector<wire> wires;
-        vector<NamedLogicGate> components;
-        Circuit() {};
-        LogicGate *searchGate(string name);
-        wire *newWire();
+        vector<ComponentBase *> outputs;
+        map<string, ComponentBase *> components;
+
+        Circuit(string fileSource, bool recreate = true);
+        virtual void input(ComponentBase *component);
+        void logCircuitOutput();
+        // LogicGate *searchGate(string name);
+        // wire *newWire();
 };

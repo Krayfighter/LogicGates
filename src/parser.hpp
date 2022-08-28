@@ -10,9 +10,9 @@ using namespace std;
 
 
 
-void linkComponent(Circuit *circuit, vector<string> *lines, unsigned int i);
+void linkComponent(Circuit *circuit, vector<string> *lines, size_t i);
 
-void parseFile(string filename, Circuit *circuit);
+Circuit parseFile(string filename);
 
 
 // class CircuitParser {
