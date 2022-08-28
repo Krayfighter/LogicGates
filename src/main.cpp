@@ -4,7 +4,7 @@
 #include "gates.hpp"
 #include "diagram.hpp"
 #include "parser.hpp"
-#include "log.hpp"
+// #include "log.hpp"
 
 using namespace std;
 
@@ -14,11 +14,11 @@ using namespace std;
 
 int main() {
 
-    Circuit circuit;
+    Circuit circuit = parseFile("example.txt");
 
-    parseFile("example.txt", &circuit);
+    circuit.logCircuitOutput();
 
-    logCircuitOutput(&circuit);
+    // logCircuitOutput(&circuit);
 
     // LogicSource in1(1);
     // LogicSource in2(0);
