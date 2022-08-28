@@ -129,3 +129,12 @@ dmypy.json
 .pyre/
 
 .vscode
+
+#build artifacts
+*.cmake
+
+*Makefile
+*LogicGates
+*CMakeFiles
+
+*CMakeCache.txt
