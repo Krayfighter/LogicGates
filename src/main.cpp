@@ -14,7 +14,7 @@ using namespace std;
 
 int main() {
 
-    Circuit circuit = parseFile("../../src/example.txt");
+    Circuit circuit = parseFile("example.txt");
 
     circuit.logCircuitOutput();
 
