@@ -131,11 +131,6 @@ dmypy.json
 .vscode
 
 #build artifacts
-# *.cmake
 
-
-# *Makefile
-# *LogicGates
-# *CMakeFiles
-
-# *CMakeCache.txt
+linux.tar.bz
+bin
